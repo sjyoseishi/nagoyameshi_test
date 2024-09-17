@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.validation.annotation.Validated;
+import com.example.nagoyameshi.form.StoreEditForm;
 
 import com.example.nagoyameshi.entity.Store;
 import com.example.nagoyameshi.repository.CategoryRepository;
@@ -87,5 +88,17 @@ public class AdminStoreController {
         redirectAttributes.addFlashAttribute("successMessage", "店舗を登録しました。");
 
         return "redirect:/admin/stores";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String edit(@PathVariable(name = "id") Integer id, Model model) {
+    	Store store = storeRepository.getReferenceById(id);
+        String imageName = store.getImageName();
+        StoreEditForm storeEditForm = new StoreEditForm(store.getId(), store.getName(), null, store.getDescription(), store.getPriceFloor(), store.getPriceCap(), store.getOpeningTime(), store.getClosingTime(), store.getPostalCode(), store.getAddress(), store.getPhoneNumber(),store.getRegularHoliday(), store.getCategory());
+
+        model.addAttribute("imageName", imageName);
+        model.addAttribute("storeEditForm", storeEditForm);
+
+        return "admin/stores/edit";
     }
 }

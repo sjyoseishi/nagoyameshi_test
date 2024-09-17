@@ -27,10 +27,12 @@
 
                              <div class="d-flex justify-content-end align-items-end mb-3">
                                  <div>
-                                     <a href="#">編集</a>
+                                     <a th:href="@{/admin/stores/__${store.getId()}__/edit}">編集</a>
                                  </div>
                              </div>
-
+                             <div th:if="${successMessage}" class="alert alert-info">
+                                 <span th:text="${successMessage}"></span>
+                             </div>
                              <div class="mb-3">
                                  <img th:if="${store.getImageName()}" th:src="@{/storage/__${store.getImageName()}__}" class="w-100" alt="店舗画像">
                                  <img th:unless="${store.getImageName()}" th:src="@{/images/noImage.png}" class="w-100" alt="NO IMAGE">

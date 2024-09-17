@@ -12,15 +12,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.nagoyameshi.entity.Store;
 import com.example.nagoyameshi.form.StoreRegisterForm;
+import com.example.nagoyameshi.repository.CategoryRepository;
 import com.example.nagoyameshi.repository.StoreRepository;
 
 @Service
 public class StoreService {
 
     private final StoreRepository storeRepository;
+    private final CategoryRepository categoryRepository;
 
-    public StoreService(StoreRepository storeRepository) {
+    public StoreService(StoreRepository storeRepository, CategoryRepository categoryRepository) {
         this.storeRepository = storeRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional
@@ -46,6 +49,7 @@ public class StoreService {
         store.setAddress(storeRegisterForm.getAddress());
         store.setPhoneNumber(storeRegisterForm.getPhoneNumber());
         store.setRegularHoliday(storeRegisterForm.getRegularHoliday());
+        store.setCategory(categoryRepository.getReferenceById(storeRegisterForm.getCategory()));
 
         storeRepository.save(store);
     }
