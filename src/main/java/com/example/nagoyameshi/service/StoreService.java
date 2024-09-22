@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.nagoyameshi.form.StoreEditForm;
 
 import com.example.nagoyameshi.entity.Store;
 import com.example.nagoyameshi.form.StoreRegisterForm;
@@ -50,6 +51,34 @@ public class StoreService {
         store.setPhoneNumber(storeRegisterForm.getPhoneNumber());
         store.setRegularHoliday(storeRegisterForm.getRegularHoliday());
         store.setCategory(categoryRepository.getReferenceById(storeRegisterForm.getCategory()));
+
+        storeRepository.save(store);
+    }
+
+    @Transactional
+    public void update(StoreEditForm storeEditForm) {
+    	Store store = storeRepository.getReferenceById(storeEditForm.getId());
+        MultipartFile imageFile = storeEditForm.getImageFile();
+
+        if (!imageFile.isEmpty()) {
+            String imageName = imageFile.getOriginalFilename();
+            String hashedImageName = generateNewFileName(imageName);
+            Path filePath = Paths.get("src/main/resources/static/storage/" + hashedImageName);
+            copyImageFile(imageFile, filePath);
+            store.setImageName(hashedImageName);
+        }
+
+        store.setName(storeEditForm.getName());
+        store.setDescription(storeEditForm.getDescription());
+        store.setPriceFloor(storeEditForm.getPriceFloor());
+        store.setPriceCap(storeEditForm.getPriceCap());
+        store.setOpeningTime(storeEditForm.getOpeningTime());
+        store.setClosingTime(storeEditForm.getClosingTime());
+        store.setPostalCode(storeEditForm.getPostalCode());
+        store.setAddress(storeEditForm.getAddress());
+        store.setPhoneNumber(storeEditForm.getPhoneNumber());
+        store.setRegularHoliday(storeEditForm.getRegularHoliday());
+        store.setCategory(storeEditForm.getCategory());
 
         storeRepository.save(store);
     }

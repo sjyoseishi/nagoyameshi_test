@@ -95,10 +95,34 @@ public class AdminStoreController {
     	Store store = storeRepository.getReferenceById(id);
         String imageName = store.getImageName();
         StoreEditForm storeEditForm = new StoreEditForm(store.getId(), store.getName(), null, store.getDescription(), store.getPriceFloor(), store.getPriceCap(), store.getOpeningTime(), store.getClosingTime(), store.getPostalCode(), store.getAddress(), store.getPhoneNumber(),store.getRegularHoliday(), store.getCategory());
+    	List<Category> category = categoryRepository.findAll();
 
         model.addAttribute("imageName", imageName);
         model.addAttribute("storeEditForm", storeEditForm);
+        model.addAttribute("category", category);
+
 
         return "admin/stores/edit";
+    }
+
+    @PostMapping("/{id}/update")
+    public String update(@ModelAttribute @Validated StoreEditForm storeEditForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "admin/stores/edit";
+        }
+
+        storeService.update(storeEditForm);
+        redirectAttributes.addFlashAttribute("successMessage", "店舗情報を編集しました。");
+
+        return "redirect:/admin/stores";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+    	storeRepository.deleteById(id);
+
+        redirectAttributes.addFlashAttribute("successMessage", "民宿を削除しました。");
+
+        return "redirect:/admin/stores";
     }
 }
