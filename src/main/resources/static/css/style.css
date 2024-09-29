@@ -10,6 +10,10 @@
    font-size: 1.5rem;
  }
 
+  h2 {
+   font-size: 1.475rem;
+ }
+
   h3 {
    font-size: 1.25rem;
  }
@@ -106,6 +110,20 @@
    width: 100%;
    height: 240px;
    object-fit: cover;
+ }
+
+  .nagoyameshi-sort-box {
+   width: 150px;
+ }
+
+ .nagoyameshi-vertical-card-image {
+   width: 100%;
+   height: 150px;
+   object-fit: cover;
+ }
+
+ .nagoyameshi-search-form {
+     max-width: 300px;
  }
 
  @media screen and (min-width: 1400px) {

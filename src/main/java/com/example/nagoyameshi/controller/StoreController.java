@@ -1,5 +1,7 @@
 package com.example.nagoyameshi.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -9,8 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import com.example.nagoyameshi.entity.Category;
 import com.example.nagoyameshi.entity.Store;
+import com.example.nagoyameshi.repository.CategoryRepository;
 import com.example.nagoyameshi.repository.StoreRepository;
 
 @Controller
@@ -19,32 +24,71 @@ import com.example.nagoyameshi.repository.StoreRepository;
 public class StoreController {
 
     private final StoreRepository storeRepository;
+    private final CategoryRepository categoryRepository;
 
-    public StoreController(StoreRepository storeRepository) {
+    public StoreController(StoreRepository storeRepository, CategoryRepository categoryRepository) {
         this.storeRepository = storeRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @GetMapping
     public String index(@RequestParam(name = "keyword", required = false) String keyword,
-                        @RequestParam(name = "category", required = false) String category,
-                        @RequestParam(name = "priceCap", required = false) Integer priceCap,
+                        @RequestParam(name = "category", required = false) Integer category,
+                        @RequestParam(name = "price", required = false) Integer price,
+                        @RequestParam(name = "order", required = false) String order,
                         @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable,
                         Model model)
     {
         Page<Store> storePage;
 
-        if (keyword != null && !keyword.isEmpty()) {
-            storePage = storeRepository.findByNameLikeOrAddressLikeOrCategoryNameLikeOrderByCategoryNameDesc("%" + keyword + "%", "%" + keyword + "%", "%" + keyword + "%", pageable);
+		if (keyword != null && !keyword.isEmpty()) {
+			if (order != null && order.equals("priceAsc")) {
+				storePage = storeRepository.findByNameLikeOrAddressLikeOrCategoryNameLikeOrderByPriceFloorAsc(
+						"%" + keyword + "%",
+						"%" + keyword + "%", "%" + keyword + "%", pageable);
+			} else {
+				storePage = storeRepository
+						.findByNameLikeOrAddressLikeOrCategoryNameLikeOrderByCreatedAtDesc(
+								"%" + keyword + "%", "%" + keyword + "%", "%" + keyword + "%", pageable);
+			}
+		} else if (price != null) {
+			if (order != null && order.equals("priceAsc")) {
+				storePage = storeRepository.findByPriceFloorLessThanEqualOrderByPriceFloorAsc(price, pageable);
+			} else {
+				storePage = storeRepository.findByPriceFloorLessThanEqualOrderByCreatedAtDesc(price, pageable);
+			}
+		} else if (category != null) {
+			if (order != null && order.equals("priceAsc")) {
+				storePage = storeRepository.findByCategoryIdOrderByPriceFloorAsc(category, pageable);
+			} else {
+				storePage = storeRepository.findByCategoryIdOrderByCreatedAtDesc(category, pageable);
+			}
+		} else {
+			if (order != null && order.equals("priceAsc")) {
+				storePage = storeRepository.findAllByOrderByPriceFloorAsc(pageable);
+			} else {
+				storePage = storeRepository.findAllByOrderByCreatedAtDesc(pageable);
+			}
+		}
+		List<Category> categoryList = categoryRepository.findAll();
 
-        } else {
-            storePage = storeRepository.findAll(pageable);
-        }
 
-        model.addAttribute("storePage", storePage);
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("category", category);
-        model.addAttribute("priceCap", priceCap);
+		model.addAttribute("storePage", storePage);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("price", price);
+		model.addAttribute("order", order);
+		model.addAttribute("category", category);
+		model.addAttribute("categoryList", categoryList);
 
         return "stores/index";
+    }
+
+    @GetMapping("/{id}")
+    public String show(@PathVariable(name = "id") Integer id, Model model) {
+    	Store store = storeRepository.getReferenceById(id);
+
+        model.addAttribute("store", store);
+
+        return "stores/show";
     }
 }

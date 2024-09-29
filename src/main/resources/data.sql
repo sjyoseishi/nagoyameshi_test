@@ -73,3 +73,16 @@ INSERT IGNORE INTO users (id, role_id, name, furigana, postal_code, address, pho
 INSERT IGNORE INTO users (id, role_id, name, furigana, postal_code, address, phone_number, age, occupation, email, password, enabled, paid_member) VALUES (10, 1, '侍 祐子', 'サムライ ユウコ', '601-0761', '京都府南丹市美山町高野X-XX-XX', '090-1234-5678', '1998年2月9日', '会社員', 'yuko.samurai@example.com', 'password', false, false);
 INSERT IGNORE INTO users (id, role_id, name, furigana, postal_code, address, phone_number, age, occupation, email, password, enabled, paid_member) VALUES (11, 1, '侍 秋美', 'サムライ アキミ', '606-8235', '京都府京都市左京区田中西春菜町X-XX-XX', '090-1234-5678', '1985年3月29日', '会社員', 'akimi.samurai@example.com', 'password', false, false);
 INSERT IGNORE INTO users (id, role_id, name, furigana, postal_code, address, phone_number, age, occupation, email, password, enabled, paid_member) VALUES (12, 1, '侍 信平', 'サムライ シンペイ', '673-1324', '兵庫県加東市新定X-XX-XX', '090-1234-5678', '2001年12月31日', '無職', 'shinpei.samurai@example.com', 'password', false, false);
+
+-- reservationsテーブル
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (1, 1, 1, '2023-04-01', '12:00', 2, 6000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (2, 1, 2, '2023-04-01', '12:00', 3, 7000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (3, 1, 3, '2023-04-01', '12:00', 4, 8000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (4, 1, 4, '2023-04-01', '12:00', 5, 9000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (5, 1, 5, '2023-04-01', '12:00', 6, 10000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (6, 1, 6, '2023-04-01', '12:00', 2, 6000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (7, 1, 7, '2023-04-01', '12:00', 3, 7000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (8, 1, 8, '2023-04-01', '12:00', 4, 8000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (9, 1, 9, '2023-04-01', '12:00', 5, 9000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (10, 1, 10, '2023-04-01', '12:00', 6, 10000);
+INSERT IGNORE INTO reservations (id, user_id, store_id, reservation_date, reservation_time, count, amount) VALUES (11, 1, 11, '2023-04-01', '12:00', 2, 6000);

@@ -25,7 +25,7 @@
                          <div class="col-xl-3 col-lg-4 col-md-12">
                              <form method="get" th:action="@{/stores}" class="w-100 mb-3">
                                  <div class="input-group">
-                                     <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="店舗名・目的地">
+                                     <input type="text" class="form-control" name="keyword" th:value="${keyword}" placeholder="店舗名・目的地・カテゴリ">
                                      <button type="submit" class="btn text-white shadow-sm nagoyameshi-btn">検索</button>
                                  </div>
                              </form>
@@ -38,9 +38,12 @@
                                      <form method="get" th:action="@{/stores}" class="w-100">
                                          <div class="form-group mb-3">
   				                        <select class="form-control" name="category">
-				                            <option th:each="category : ${category}"
-				                                    th:value="${category.getId()}"
-				                                    th:text="${category.getName()}"></option>
+											<option value="" hidden>選択してください</option>
+												<th:block th:each="categoryList : ${categoryList}">
+													<option th:value="${categoryList.getId()}"
+														th:selected="${categoryList.getId() == category}"
+														th:text="${categoryList.getName()}"></option>
+												</th:block>
 				                        </select>
                                          </div>
                                          <div class="form-group">
@@ -50,6 +53,40 @@
                                  </div>
                              </div>
 
+							<div class="card mb-3">
+								<div class="card-header">
+									予算から探す
+								</div>
+								<div class="card-body">
+									<form method="get" th:action="@{/stores}" class="w-100">
+										<div class="form-group mb-3">
+											<select class="form-control form-select" name="price">
+												<option value="" hidden>選択してください</option>
+												<option value="1000" th:selected="${price == 1000}">1,000円以内</option>
+												<option value="2000" th:selected="${price == 2000}">2,000円以内</option>
+												<option value="3000" th:selected="${price == 3000}">3,000円以内</option>
+												<option value="4000" th:selected="${price == 4000}">4,000円以内</option>
+												<option value="5000" th:selected="${price == 5000}">5,000円以内</option>
+												<option value="6000" th:selected="${price == 6000}">6,000円以内</option>
+												<option value="8000" th:selected="${price == 8000}">8,000円以内</option>
+												<option value="10000" th:selected="${price == 10000}">10,000円以内</option>
+												<option value="15000" th:selected="${price == 15000}">15,000円以内</option>
+												<option value="20000" th:selected="${price == 20000}">20,000円以内</option>
+												<option value="30000" th:selected="${price == 30000}">30,000円以内</option>
+												<option value="50000" th:selected="${price == 50000}">50,000円以内</option>
+												<option value="80000" th:selected="${price == 80000}">80,000円以内</option>
+												<option value="100000" th:selected="${price == 100000}">100,000円以内</option>
+											</select>
+										</div>
+										<div class="form-group">
+											<button type="submit"
+												class="btn text-white shadow-sm w-100 nagoyameshi-btn">検索</button>
+										</div>
+									</form>
+								</div>
+							</div>
+
+
 
                          </div>
 
@@ -57,6 +94,16 @@
                              <div class="d-flex justify-content-between flex-wrap">
                                  <p th:if="${storePage.getTotalPages() > 1}" class="fs-5 mb-3" th:text="${'検索結果：' + storePage.getTotalElements() + '件' + '（' + (storePage.getNumber() + 1) + ' / ' + storePage.getTotalPages() + ' ページ）'}"></p>
                                  <p th:unless="${storePage.getTotalPages() > 1}" class="fs-5 mb-3" th:text="${'検索結果：' + storePage.getTotalElements() + '件'}"></p>
+                                 <form method="get" th:action="@{/stores}" class="mb-3 nagoyameshi-sort-box">
+									<input th:if="${keyword}" type="hidden" name="keyword" th:value="${keyword}">
+									<input th:if="${price}" type="hidden" name="price" th:value="${price}">
+									<input th:if="${category}" type="hidden" name="category" th:value="${category}">
+									<select class="form-select form-select-sm" name="order" onChange="this.form.submit();">
+										<option value="createdAtDesc"
+											th:selected="${order == 'createdAtDesc' || order == null}">新着順</option>
+										<option value="priceAsc" th:selected="${order == 'priceAsc'}">料金が安い順</option>
+									</select>
+								</form>
                              </div>
 
                              <div class="mb-3" th:each="store : ${storePage}">
@@ -83,7 +130,7 @@
                                                      </p>
 
                                                      <p class="card-text">
-
+                                                         <span th:text="${#numbers.formatInteger(store.getPriceFloor(), 1, 'COMMA') + '～' + #numbers.formatInteger(store.getPriceCap(), 1, 'COMMA') + '円'}"></span>
                                                      </p>
                                                  </div>
                                              </div>
@@ -98,15 +145,15 @@
                                      <ul class="pagination">
                                          <li class="page-item">
                                              <span th:if="${storePage.isFirst()}" class="page-link disabled">前</span>
-                                             <a th:unless="${storePage.isFirst()}" th:href="@{/stores(page = ${storePage.getNumber() - 1}, keyword = ${keyword}, area = ${area}, price = ${price})}" class="page-link nagoyameshi-page-link">前</a>
+                                             <a th:unless="${storePage.isFirst()}" th:href="@{/stores(page = ${storePage.getNumber() - 1}, keyword = ${keyword}, price = ${price}, order = ${order})}" class="page-link nagoyameshi-page-link">前</a>
                                          </li>
                                          <li th:each="i : ${#numbers.sequence(0, storePage.getTotalPages() - 1)}" class="page-item">
                                              <span th:if="${i == storePage.getNumber()}" class="page-link active nagoyameshi-active" th:text="${i + 1}"></span>
-                                             <a th:unless="${i == storePage.getNumber()}" th:href="@{/stores(page = ${i}, keyword = ${keyword}, area = ${area}, price = ${price})}" class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
+                                             <a th:unless="${i == storePage.getNumber()}" th:href="@{/stores(page = ${i}, keyword = ${keyword}, price = ${price}, order = ${order})}" class="page-link nagoyameshi-page-link" th:text="${i + 1}"></a>
                                          </li>
                                          <li class="page-item">
                                              <span th:if="${storePage.isLast()}" class="page-link disabled">次</span>
-                                             <a th:unless="${storePage.isLast()}" th:href="@{/stores(page = ${storePage.getNumber() + 1}, keyword = ${keyword}, area = ${area}, price = ${price})}" class="page-link nagoyameshi-page-link">次</a>
+                                             <a th:unless="${storePage.isLast()}" th:href="@{/stores(page = ${storePage.getNumber() + 1}, keyword = ${keyword}, price = ${price}, order = ${order})}" class="page-link nagoyameshi-page-link">次</a>
                                          </li>
                                      </ul>
                                  </nav>
