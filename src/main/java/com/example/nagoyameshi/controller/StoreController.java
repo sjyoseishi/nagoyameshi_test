@@ -12,11 +12,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.example.nagoyameshi.form.ReservationInputForm;
 
 import com.example.nagoyameshi.entity.Category;
+import com.example.nagoyameshi.entity.Favorite;
+import com.example.nagoyameshi.entity.Review;
 import com.example.nagoyameshi.entity.Store;
+import com.example.nagoyameshi.entity.User;
 import com.example.nagoyameshi.repository.CategoryRepository;
+import com.example.nagoyameshi.repository.FavoriteRepository;
+import com.example.nagoyameshi.repository.ReviewRepository;
 import com.example.nagoyameshi.repository.StoreRepository;
+import com.example.nagoyameshi.security.UserDetailsImpl;
+import com.example.nagoyameshi.service.FavoriteService;
+import com.example.nagoyameshi.service.ReviewService;
 
 @Controller
 @RequestMapping("/stores")
@@ -25,10 +35,18 @@ public class StoreController {
 
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
+    private final ReviewRepository reviewRepository;
+    private final ReviewService reviewService;
+    private final FavoriteService favoriteService;
+    private final FavoriteRepository favoriteRepository;
 
-    public StoreController(StoreRepository storeRepository, CategoryRepository categoryRepository) {
+    public StoreController(StoreRepository storeRepository, CategoryRepository categoryRepository, ReviewRepository reviewRepository, ReviewService reviewService, FavoriteService favoriteService, FavoriteRepository favoriteRepository) {
         this.storeRepository = storeRepository;
         this.categoryRepository = categoryRepository;
+        this.reviewRepository = reviewRepository;
+        this.reviewService = reviewService;
+        this.favoriteService = favoriteService;
+        this.favoriteRepository = favoriteRepository;
     }
 
     @GetMapping
@@ -84,10 +102,32 @@ public class StoreController {
     }
 
     @GetMapping("/{id}")
-    public String show(@PathVariable(name = "id") Integer id, Model model) {
+    public String show(@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, @PathVariable(name = "id") Integer id, Model model) {
     	Store store = storeRepository.getReferenceById(id);
+    	List<Review> reviewPage = reviewRepository.findTop6ByStoreOrderByCreatedAtDesc(store);
+    	long reviewCount = reviewRepository.countByStore(store);
+        boolean isFavorite = false;
+        boolean hasUserAlreadyReviewed = false;
+        Favorite favorite = null;
+
+
+        if (userDetailsImpl != null) {
+            User user = userDetailsImpl.getUser();
+            hasUserAlreadyReviewed = reviewService.hasUserAlreadyReviewed(store, user);
+            isFavorite = favoriteService.isFavorite(store, user);
+            if (isFavorite) {
+                favorite = favoriteRepository.findByStoreAndUser(store, user);
+            }
+        }
+
 
         model.addAttribute("store", store);
+        model.addAttribute("reviewPage", reviewPage);
+        model.addAttribute("reviewCount", reviewCount);
+        model.addAttribute("isFavorite", isFavorite);
+        model.addAttribute("hasUserAlreadyReviewed", hasUserAlreadyReviewed);
+        model.addAttribute("favorite", favorite);
+        model.addAttribute("reservationInputForm", new ReservationInputForm());
 
         return "stores/show";
     }

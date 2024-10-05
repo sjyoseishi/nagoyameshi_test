@@ -20,6 +20,7 @@
      price_cap INT NOT NULL,
      opening_time TIME NOT NULL,
      closing_time TIME NOT NULL,
+     seating_capacity int (11) DEFAULT NULL,
      postal_code VARCHAR(50) NOT NULL,
      address VARCHAR(255) NOT NULL,
      phone_number VARCHAR(50) NOT NULL,
@@ -61,10 +62,8 @@
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_id INT NOT NULL,
 	store_id INT NOT NULL,
-	reservation_date DATE NOT NULL,
-	reservation_time TIME NOT NULL,
+    reservation_datetime DATETIME NOT NULL,
 	count INT NOT NULL,
-	amount INT NOT NULL,
 	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	FOREIGN KEY (user_id) REFERENCES users (id),
@@ -94,14 +93,16 @@
     FOREIGN KEY (user_id) REFERENCES users (id)
  );
 
-  CREATE TABLE IF NOT EXISTS companys (
-	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	company_name VARCHAR(50) NOT NULL,
-	daihyo_name VARCHAR(50) NOT NULL,
-	foundation_date DATE NOT NULL,
-	postal_code VARCHAR(50) NOT NULL,
+ CREATE TABLE IF NOT EXISTS companies (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    postal_code VARCHAR(50) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    company_description VARCHAR(255) NOT NULL,
-	created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    representative VARCHAR(50) NOT NULL,
+    establishment_date VARCHAR(50) NOT NULL,
+    capital VARCHAR(50) NOT NULL,
+    business VARCHAR(255) NOT NULL,
+    number_of_employees VARCHAR(50) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
  );

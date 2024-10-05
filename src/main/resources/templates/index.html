@@ -36,7 +36,7 @@
                      <h2 class="text-center mb-3">新着</h2>
                      <div class="row row-cols-lg-5 row-cols-2 g-3 mb-5">
                          <div class="col" th:each="newStore : ${newStores}">
-                             <a th:href="@{/Stores/__${newStore.getId()}__}" class="link-dark nagoyameshi-card-link">
+                             <a th:href="@{/stores/__${newStore.getId()}__}" class="link-dark nagoyameshi-card-link">
                                  <div class="card h-100">
                                      <img th:if="${newStore.getImageName()}" th:src="@{/storage/__${newStore.getImageName()}__}" class="card-img-top nagoyameshi-vertical-card-image" alt="店舗画像">
                                      <img th:unless="${newStore.getImageName()}" th:src="@{/images/noImage.png}" class="card-img-top nagoyameshi-vertical-card-image" alt="NO IMAGE">
@@ -54,12 +54,12 @@
                          </div>
                      </div>
 	                 <h2 class="text-center mb-3">カテゴリから探す</h2>
-					 <div class="mb-5">
+					<div class="mb-5">
 						<th:block th:each="category : ${categories}">
-							<a th:href="@{/restaurants?category=__${category.getId()}__}" th:selected="${category.getId() == category}"
+							<a th:href="@{/stores?category=__${category.getId()}__}"
 								class="btn btn-outline-secondary btn-sm me-1 mb-2" th:text="${category.getName()}">居酒屋</a>
 						</th:block>
-					 </div>
+					</div>
                  </div>
              </main>
 

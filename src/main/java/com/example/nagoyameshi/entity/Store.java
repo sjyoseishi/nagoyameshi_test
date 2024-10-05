@@ -46,6 +46,9 @@ public class Store {
  	@Column(name = "closing_time")
  	private LocalTime closingTime;
 
+	@Column(name = "seating_capacity")
+	private int seatingCapacity;
+
      @Column(name = "postal_code")
      private String postalCode;
 

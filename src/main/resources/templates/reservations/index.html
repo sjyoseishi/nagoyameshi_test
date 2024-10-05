@@ -33,9 +33,9 @@
                                  <thead>
                                      <tr>
                                          <th scope="col">店舗名</th>
-                                         <th scope="col">予約日日</th>
-                                         <th scope="col">予約時刻</th>
-                                         <th scope="col">予約人数</th>
+                                         <th scope="col">予約日時</th>
+										 <th scope="col">予約人数</th>
+										 <th scope="col">キャンセル</th>
                                      </tr>
                                  </thead>
                                  <tbody>
@@ -43,9 +43,14 @@
                                          <td>
                                              <a th:href="@{/stores/__${reservation.getStore().getId()}__}" th:text="${reservation.getStore().getName()}"></a>
                                          </td>
-                                         <td th:text="${reservation.getReservationDate()}"></td>
-                                         <td th:text="${reservation.getReservationTime()}"></td>
+                                         <td th:text="${#temporals.format(reservation.getReservationDateTime(), 'yyyy年M月d日 H時mm分')}"></td>
                                          <td th:text="${reservation.getCount + '名'}"></td>
+                                         <td>
+                                         	<button type="button" class="btn text-white shadow-sm w-30 nagoyameshi-btn" data-bs-toggle="modal"
+											data-bs-target="#cancelModal">
+											キャンセル</button>
+                                         </td>
+
                                      </tr>
                                  </tbody>
                              </table>

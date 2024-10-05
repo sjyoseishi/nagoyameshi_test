@@ -126,6 +126,19 @@
      max-width: 300px;
  }
 
+  .color-1{
+   color: #F8C601;
+ }
+
+ .form-controll option{
+   color: #F8C601;
+ }
+
+ .box {
+	display: flex;
+	justify-content: space-between;
+}
+
  @media screen and (min-width: 1400px) {
    .nagoyameshi-container {
      max-width: 1200px;

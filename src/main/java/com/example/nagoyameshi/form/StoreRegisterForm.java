@@ -30,11 +30,15 @@ public class StoreRegisterForm {
     @Min(value = 1, message = "価格上限は価格下限以上の金額を設定してください。")
     private Integer priceCap;
 
-    @NotNull(message = "営業開始時刻を入力してください。")
+    @NotNull(message = "開店時間を入力してください。")
     private LocalTime openingTime;
 
-    @NotNull(message = "営業終了時刻を入力してください。")
+    @NotNull(message = "閉店時間を入力してください。")
     private LocalTime closingTime;
+
+    @NotNull(message = "座席数を入力してください。")
+    @Min(value = 1, message = "座席数は1人以上に設定してください。")
+    private Integer seatingCapacity;
 
     @NotBlank(message = "郵便番号を入力してください。")
     private String postalCode;

@@ -115,6 +115,15 @@
                                      </div>
                                  </div>
                                  <div class="row pb-2 mb-2 border-bottom">
+                                     <div class="col-3">
+                                         <span class="fw-bold">席数</span>
+                                     </div>
+
+                                     <div class="col">
+                                        <span th:text="${store.getSeatingCapacity() + '席'}"></span>
+                                     </div>
+                                 </div>
+                                 <div class="row pb-2 mb-2 border-bottom">
                                     <div class="col-3">
                                         <span class="fw-bold">定休日</span>
                                     </div>
