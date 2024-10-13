@@ -55,7 +55,7 @@ public class User {
      private Boolean enabled;
 
      @Column(name = "paid_member")
-     private Boolean paidMember;
+     private String paidMember;
 
      @Column(name = "created_at", insertable = false, updatable = false)
      private Timestamp createdAt;

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.nagoyameshi.repository.StoreRepository;
-import com.example.nagoyameshi.repository.UserRepository;
 import com.example.nagoyameshi.repository.ReviewRepository;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
@@ -37,13 +36,12 @@ public class ReviewController {
     private final ReviewRepository reviewRepository;
     private final StoreRepository storeRepository;
     private final ReviewService reviewService;
-    private final UserRepository userRepository;
 
-    public ReviewController(ReviewRepository reviewRepository,StoreRepository storeRepository,ReviewService reviewService, UserRepository userRepository) {
+    public ReviewController(ReviewRepository reviewRepository,StoreRepository storeRepository,ReviewService reviewService) {
 	    this.reviewRepository = reviewRepository;
 	    this.storeRepository = storeRepository;
 	    this.reviewService = reviewService;
-	    this.userRepository = userRepository;
+
 
     }
 
@@ -58,7 +56,7 @@ public class ReviewController {
 
 	 //レビュー一覧の表示
 	 @GetMapping("/reviews")
-	  public String reviews(@PathVariable(name = "store") Integer storeId,Model model,@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC)Pageable pageable) {
+	  public String reviews(@PathVariable(name = "storeId") Integer storeId,Model model,@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC)Pageable pageable) {
 
 		  Store store = storeRepository.getReferenceById(storeId);
 		  Page<Review> reviewPage = reviewRepository.findByStoreOrderByCreatedAtDesc(store, pageable);

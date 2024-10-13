@@ -47,7 +47,10 @@
                                          <td th:text="${reservation.getCount + '名'}"></td>
                                          <td>
                                          	<button type="button" class="btn text-white shadow-sm w-30 nagoyameshi-btn" data-bs-toggle="modal"
-											data-bs-target="#cancelModal">
+											data-bs-target="#cancelModal"
+											th:data-store_name="${reservation.getStore().getName()}"
+											th:data-id="${reservation.getId()}"
+											th:if="${reservation.getReservationDateTime() ge now}">
 											キャンセル</button>
                                          </td>
 

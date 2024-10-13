@@ -18,11 +18,11 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="removeFavoriteModalLabel"></h5>
+                                <h5 class="modal-title" id="removeFavoriteModalLabel" th:text="${'お気に入りから削除してもよろしいですか？'}"></h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
                             </div>
                             <div class="modal-footer">
-                                <form method="post" action="" name="removeFavoriteForm">
+                                <form method="post" action="@{/stores/__${store.getId()}__/favorites/__${favorite.getId()}__/delete" name="removeFavoriteForm">
                                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                                     <button type="submit" class="btn text-white shadow-sm nagoyameshi-btn-danger">解除</button>
                                 </form>

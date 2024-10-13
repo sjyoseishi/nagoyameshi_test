@@ -120,6 +120,7 @@ public class ReservationController {
 		return "redirect:/stores/{id}/reservations/confirm";
 	}
 
+    @GetMapping("/stores/{id}/reservations/confirm")
 	public String confirm(@PathVariable(name = "id") Integer id,
 			@ModelAttribute ReservationInputForm reservationInputForm,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, RedirectAttributes redirectAttributes,
@@ -136,7 +137,7 @@ public class ReservationController {
 				.parse(reservationInputForm.getReservationDate() + "T" + reservationInputForm.getReservationTime());
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy年MM月dd日 H時mm分");
 
-		ReservationRegisterForm reservationRegisterForm = new ReservationRegisterForm(store.getId(), user.getId(),
+		ReservationRegisterForm reservationRegisterForm = new ReservationRegisterForm(user.getId(), store.getId(),
 				reservationDateTime.format(dtf), reservationInputForm.getCount());
 
 		model.addAttribute("store", store);

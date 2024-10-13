@@ -121,7 +121,7 @@ public class AdminStoreController {
     public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
     	storeRepository.deleteById(id);
 
-        redirectAttributes.addFlashAttribute("successMessage", "民宿を削除しました。");
+        redirectAttributes.addFlashAttribute("successMessage", "店舗を削除しました。");
 
         return "redirect:/admin/stores";
     }
