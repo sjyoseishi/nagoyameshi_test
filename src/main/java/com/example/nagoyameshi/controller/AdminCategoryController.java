@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.example.nagoyameshi.service.CategoryService;
 import com.example.nagoyameshi.form.CategoryEditForm;
-
-
+import com.example.nagoyameshi.form.CategoryRegisterForm;
 import com.example.nagoyameshi.entity.Category;
 import com.example.nagoyameshi.repository.CategoryRepository;
 
@@ -79,6 +78,19 @@ public class AdminCategoryController {
 
         categoryService.update(categoryEditForm);
         redirectAttributes.addFlashAttribute("successMessage", "カテゴリ情報を編集しました。");
+
+        return "redirect:/admin/categorys";
+    }
+
+
+	@PostMapping("/create")
+    public String create(@ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            return "admin/categorys/register";
+        }
+
+        categoryService.create(categoryRegisterForm);
+        redirectAttributes.addFlashAttribute("successMessage", "カテゴリーを登録しました。");
 
         return "redirect:/admin/categorys";
     }
