@@ -1,5 +1,7 @@
 package com.example.nagoyameshi.controller;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -19,7 +21,10 @@ import com.example.nagoyameshi.service.CategoryService;
 import com.example.nagoyameshi.form.CategoryEditForm;
 import com.example.nagoyameshi.form.CategoryRegisterForm;
 import com.example.nagoyameshi.entity.Category;
+import com.example.nagoyameshi.entity.Store;
 import com.example.nagoyameshi.repository.CategoryRepository;
+import com.example.nagoyameshi.repository.StoreRepository;
+
 
 
 @Controller
@@ -28,10 +33,13 @@ public class AdminCategoryController {
 
     private final CategoryRepository categoryRepository;
     private final CategoryService categoryService;
+    private final StoreRepository storeRepository;
 
-    public AdminCategoryController(CategoryRepository categoryRepository, CategoryService categoryService) {
+
+    public AdminCategoryController(CategoryRepository categoryRepository, CategoryService categoryService, StoreRepository storeRepository) {
         this.categoryRepository = categoryRepository;
         this.categoryService = categoryService;
+        this.storeRepository = storeRepository;
     }
 
     @GetMapping
@@ -48,6 +56,12 @@ public class AdminCategoryController {
         model.addAttribute("keyword", keyword);
 
         return "admin/categorys/index";
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        model.addAttribute("categoryRegisterForm", new CategoryRegisterForm());
+        return "admin/categorys/register";
     }
 
     @GetMapping("/{id}")
@@ -84,8 +98,9 @@ public class AdminCategoryController {
 
 
 	@PostMapping("/create")
-    public String create(@ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String create(Model model, @ModelAttribute @Validated CategoryRegisterForm categoryRegisterForm, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
+        	model.addAttribute("category", categoryRegisterForm);
             return "admin/categorys/register";
         }
 
@@ -93,5 +108,24 @@ public class AdminCategoryController {
         redirectAttributes.addFlashAttribute("successMessage", "カテゴリーを登録しました。");
 
         return "redirect:/admin/categorys";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
+
+    	List<Store> store = storeRepository.findByCategoryId(id);
+        if (store != null) {
+
+            redirectAttributes.addFlashAttribute("successMessage", "カテゴリ情報が既に店舗に紐付けられているので、削除できません。");
+            return "admin/categorys/register";
+
+        }else {
+
+        	categoryRepository.deleteById(id);
+
+            redirectAttributes.addFlashAttribute("successMessage", "カテゴリ情報を削除しました。");
+
+            return "redirect:/admin/categorys";
+        }
     }
 }

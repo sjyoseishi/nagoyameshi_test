@@ -2,6 +2,7 @@ package com.example.nagoyameshi.entity;
 
 import java.sql.Timestamp;
 
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,9 +28,11 @@ public class Category {
 	@Column(name = "name")
 	private String name;
 
+	@CreationTimestamp
 	@Column(name = "created_at")
 	private Timestamp createdAt;
 
+	@CreationTimestamp
 	@Column(name = "updated_at")
 	private Timestamp updatedAt;
 

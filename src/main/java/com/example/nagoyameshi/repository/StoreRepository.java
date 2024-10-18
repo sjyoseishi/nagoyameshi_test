@@ -24,6 +24,11 @@ public interface StoreRepository extends JpaRepository<Store, Integer>{
 
     public List<Store> findTop10ByOrderByCreatedAtDesc();
 
+	public List<Store> findByCategoryId(Integer categoryId);
+
+
+
+
 
 
 
