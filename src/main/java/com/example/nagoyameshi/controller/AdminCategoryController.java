@@ -114,10 +114,11 @@ public class AdminCategoryController {
     public String delete(@PathVariable(name = "id") Integer id, RedirectAttributes redirectAttributes) {
 
     	List<Store> store = storeRepository.findByCategoryId(id);
-        if (store != null) {
+
+        if (store != null && store.size()>0 ) {
 
             redirectAttributes.addFlashAttribute("successMessage", "カテゴリ情報が既に店舗に紐付けられているので、削除できません。");
-            return "admin/categorys/register";
+            return "redirect:/admin/categorys";
 
         }else {
 
